@@ -5,9 +5,11 @@ const enterSession = (req, res) => {
 
   const hasSessionId = sessions[sessionId];
 
-  if (!hasSessionId) res.status(400).send({ message: "Sessão incorreta" });
+  if (!hasSessionId) {
+    return res.status(400).send({ message: "Sessão incorreta" });
+  }
 
-  res.status(201).send({ sessionId });
+  return res.status(201).send({ sessionId });
 };
 
 module.exports = enterSession;

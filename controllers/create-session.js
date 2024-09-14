@@ -11,6 +11,7 @@ const createSession = (req, res) => {
     currentPlayers: new Set(),
     roundQueueSet: new Set(),
     firstPlayer: null,
+    players: []
   };
 
   res.status(201).send({ sessionId });

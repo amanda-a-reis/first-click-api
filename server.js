@@ -27,27 +27,34 @@ app.post("/validate-nickname", validateNickName);
 
 wss.on("connection", (ws) => {
   ws.on("message", (message) => {
-    const { sessionId, nickname } = JSON.parse(message);
+    const { sessionId, nickname, avatar } = JSON.parse(message);
 
     ws.sessionId = sessionId;
 
     const currentSession = sessions[sessionId];
 
-    currentSession.currentPlayers?.add(nickname);
+    console.log("nickName", nickname);
+    console.log("avatar", avatar);
 
-    const players = Array.from([...currentSession.currentPlayers]);
+    currentSession.currentPlayers.add(nickname);
 
-    const firstPlayer = currentSession.firstPlayer ?? "";
+    const player = { [nickname]: avatar };
+    
+    currentSession.players.push(player)
+
+    const firstPlayer = currentSession.firstPlayer || "";
 
     const data = JSON.stringify({
       firstPlayer,
-      players,
+      players: currentSession.players,
     });
+
+    console.log("data", data);
 
     broadcastToSession(sessionId, data);
 
     if (!sessions[sessionId]) {
-      sessions[sessionId] = { currentPlayers: new Set() };
+      sessions[sessionId] = { currentPlayers: new Map() };
     }
   });
 
@@ -56,6 +63,6 @@ wss.on("connection", (ws) => {
   });
 });
 
-server.listen(3001, () => {
-  console.log("Server running on port 3001");
-});
+server.listen(process.env.PORT || 3001, () =>
+  console.log("Listening on port: " + process.env.PORT || 3001)
+);

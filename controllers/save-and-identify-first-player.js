@@ -21,13 +21,13 @@ const saveAndIdentifyFirstPlayer = (req, res) => {
     session.firstPlayer = nickname;
   }
 
-  const players = Array.from([...session.currentPlayers]);
+  const firstPlayer = session.firstPlayer || "";
 
-  const firstPlayer = session.firstPlayer ?? "";
+  console.log("firstPlayer", firstPlayer);
 
   const data = JSON.stringify({
     firstPlayer,
-    players,
+    players: session.players,
   });
 
   broadcastToSession(sessionId, data);

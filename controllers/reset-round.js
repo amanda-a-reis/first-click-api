@@ -12,13 +12,11 @@ const resetRound = async (req, res) => {
 
   const session = sessions[sessionId];
 
-  const players = Array.from([...session.currentPlayers]);
-
-  const firstPlayer = session.firstPlayer ?? "";
+  const firstPlayer = session.firstPlayer || "";
 
   const data = JSON.stringify({
     firstPlayer,
-    players,
+    players: session.players,
   });
 
   broadcastToSession(sessionId, data);
