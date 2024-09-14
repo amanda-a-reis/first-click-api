@@ -19,17 +19,20 @@ const saveAndIdentifyFirstPlayer = (req, res) => {
 
   if (session.roundQueueSet.size === 0) {
     session.firstPlayer = nickname;
-    session.firstPlayerNickname = nickname;
   }
 
-  session.roundQueueSet.add(nickname);
+  const players = Array.from([...session.currentPlayers]);
 
-  broadcastToSession(
-    sessionId,
-    `O primeiro a clicar foi ${session.firstPlayerNickname}`
-  );
+  const firstPlayer = session.firstPlayer ?? "";
 
-  res.status(200).json({ message: "Voto registrado" });
+  const data = JSON.stringify({
+    firstPlayer,
+    players,
+  });
+
+  broadcastToSession(sessionId, data);
+
+  res.status(200).json({ message: "Click registrado" });
 };
 
 module.exports = saveAndIdentifyFirstPlayer;

@@ -8,9 +8,9 @@ const createSession = (req, res) => {
   const sessionId = createSessionId();
 
   sessions[sessionId] = {
+    currentPlayers: new Set(),
     roundQueueSet: new Set(),
     firstPlayer: null,
-    firstPlayerNickname: null,
   };
 
   res.status(201).send({ sessionId });
