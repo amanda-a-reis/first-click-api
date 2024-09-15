@@ -4,10 +4,6 @@ const broadcastToSession = require("../web-socket/broadcast-to-session");
 const saveAndIdentifyFirstPlayer = (req, res) => {
   const { sessionId, nickname } = req.body;
 
-  if (!sessions[sessionId]) {
-    return res.status(400).json({ message: "Sessão não encontrada" });
-  }
-
   const session = sessions[sessionId];
 
   if (session.firstPlayer) {
@@ -27,7 +23,7 @@ const saveAndIdentifyFirstPlayer = (req, res) => {
 
   const data = JSON.stringify({
     firstPlayer,
-    players: session.players,
+    players: session.players
   });
 
   broadcastToSession(sessionId, data);
