@@ -6,6 +6,10 @@ const saveAndIdentifyFirstPlayer = (req, res) => {
 
   const session = sessions[sessionId];
 
+  if (!session || !session.currentPlayers.has(nickname)) {
+    return res.status(400).send({ message: "disconnected" });
+  }
+
   if (session.firstPlayer) {
     return res.status(200).send({ message: "Ok!" });
   }
@@ -23,7 +27,7 @@ const saveAndIdentifyFirstPlayer = (req, res) => {
 
   const data = JSON.stringify({
     firstPlayer,
-    players: session.players
+    players: session.players,
   });
 
   broadcastToSession(sessionId, data);

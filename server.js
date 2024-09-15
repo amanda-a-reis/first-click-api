@@ -34,12 +34,12 @@ wss.on("connection", (ws) => {
 
     ws.sessionId = sessionId;
 
-    const currentSession = sessions[sessionId];
-
     console.log(`User ${nickname} enter session ${sessionId}`);
 
-    if (!currentSession) {
-      currentSession = {
+    if (!sessions[sessionId]) {
+      console.log("CREATING A NEW SESSION")
+
+      sessions[sessionId] = {
         currentPlayers: new Set(),
         roundQueueSet: new Set(),
         firstPlayer: null,
@@ -47,37 +47,32 @@ wss.on("connection", (ws) => {
       };
     }
 
-    console.log(
-      "currentSession.currentPlayers.has(nickname)",
-      currentSession.currentPlayers.has(nickname)
-    );
-
-    if (currentSession.currentPlayers.has(nickname)) {
-      const firstPlayer = currentSession.firstPlayer || "";
+    if (sessions[sessionId].currentPlayers.has(nickname)) {
+      const firstPlayer = sessions[sessionId].firstPlayer || "";
 
       const data = JSON.stringify({
         firstPlayer,
-        players: currentSession.players,
+        players: sessions[sessionId].players,
       });
 
-      console.log("Data to send >> ", data);
+      console.log("Data to send 1 >> ", data);
 
       broadcastToSession(sessionId, data);
     } else {
-      currentSession.currentPlayers.add(nickname);
+      sessions[sessionId].currentPlayers.add(nickname);
 
       const player = { [nickname]: avatar };
 
-      currentSession.players.push(player);
+      sessions[sessionId].players.push(player);
 
-      const firstPlayer = currentSession.firstPlayer || "";
+      const firstPlayer = sessions[sessionId].firstPlayer || "";
 
       const data = JSON.stringify({
         firstPlayer,
-        players: currentSession.players,
+        players: sessions[sessionId].players,
       });
 
-      console.log("Data to send >> ", data);
+      console.log("Data to send 2 >> ", data);
 
       broadcastToSession(sessionId, data);
     }

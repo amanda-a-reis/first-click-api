@@ -1,3 +1,3 @@
-const sessions = {};
+let sessions = {};
 
 module.exports = sessions;
